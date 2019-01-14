@@ -1,3 +1,5 @@
+![Release](https://jitpack.io/v/ImaginationRoom/CryptoAndroidService.svg) (https://jitpack.io/#ImaginationRoom/CryptoAndroidService)
+
 ## How to
 
 To add this library into your build:
