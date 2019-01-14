@@ -3,23 +3,6 @@ apply plugin: 'com.github.dcendents.android-maven'
 
 group='com.github.ImaginationRoom'
 
-if (android.productFlavors.size() > 0) {
-    android.libraryVariants.all { variant ->
-        if (variant.name.toLowerCase().contains("debug")) {
-            return
-        }
-
-        def bundleTask = tasks["bundle${variant.name.capitalize()}"]
-
-        artifacts {
-            archives(bundleTask.archivePath) {
-                classifier variant.flavorName
-                builtBy bundleTask
-                name = project.name
-            }
-        }
-    }
-}
 
 android {
     compileSdkVersion 28
@@ -27,8 +10,8 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 6
-        versionName "1.0.5"
+        versionCode 7
+        versionName "1.0.6"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -71,4 +54,12 @@ dependencies {
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+}
+
+afterEvaluate {
+    android.productFlavors.all {
+        flavor ->
+            tasks."generate${flavor.name.capitalize()}DebugResources".dependsOn "download${flavor.name}library"
+            tasks."generate${flavor.name.capitalize()}ReleaseResources".dependsOn "download${flavor.name}library"
+    }
 }
