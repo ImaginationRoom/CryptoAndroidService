@@ -1,4 +1,25 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+
+group='com.github.ImaginationRoom'
+
+if (android.productFlavors.size() > 0) {
+    android.libraryVariants.all { variant ->
+        if (variant.name.toLowerCase().contains("debug")) {
+            return
+        }
+
+        def bundleTask = tasks["bundle${variant.name.capitalize()}"]
+
+        artifacts {
+            archives(bundleTask.archivePath) {
+                classifier variant.flavorName
+                builtBy bundleTask
+                name = project.name
+            }
+        }
+    }
+}
 
 android {
     compileSdkVersion 28
@@ -6,13 +27,12 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 5
-        versionName "1.0.4"
+        versionCode 6
+        versionName "1.0.5"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
-//    publishNonDefault true
     aidlPackageWhiteList "com.imaginationroom.cryptoandroidservice/ICryptoService.aidl",
             "com.imaginationroom.cryptoandroidservice/ICryptoResult.aidl"
 
